@@ -1,3 +1,6 @@
+#include <stdio.h>
+#include <stdlib.h>
+
 struct Node
 {
     int data;
@@ -9,7 +12,7 @@ struct Node
 */
 void initLinkList(struct Node **head)
 {
-
+    *head=NULL;
 }
 /*
     function addToHead will insert a node which hold data into linked list from head of the linked list.
@@ -18,7 +21,15 @@ void initLinkList(struct Node **head)
 */
 void addToHead(struct Node **head, int data)
 {
-
+    struct Node *temp=(struct Node*) malloc (sizeof(struct Node));
+    temp->data=data;
+    temp->next=*head;
+    temp->prev=NULL;
+    if(*head!=NULL){
+        (*head)->prev=temp;
+    }
+    *(head)=temp;
+    
 }
 /*
     function addToHead will insert a node which hold data into linked list from tail of the linked list.
@@ -27,6 +38,19 @@ void addToHead(struct Node **head, int data)
 */
 void addToTail(struct Node **head, int data)
 {
+    struct Node *temp=(struct Node*) malloc (sizeof(struct Node));
+    temp->data=data;
+    struct Node* curr=*head;
+    while(curr)
+    {
+        if(curr->next==NULL)
+        {
+            curr->next=temp;
+            temp->prev=curr;
+            temp->next=NULL;
+        }
+        curr=curr->next;
+    }
 
 }
 /*
@@ -36,7 +60,29 @@ void addToTail(struct Node **head, int data)
 */
 void deleteData(struct Node **head, int data)
 {
-
+    struct Node* curr=*head;
+    while(curr)
+    {
+        if(curr->data==data)
+        {
+            if(curr==*head)
+            {
+                *head=curr->next;
+                (*head)->prev=NULL;
+            }
+            else if(curr->next==NULL)
+            {
+                curr->prev->next=NULL;
+            }
+            else{
+                curr->prev->next=curr->next;
+                curr->next->prev=curr->prev;
+            }
+            free(curr);
+            break;
+        }
+        curr=curr->next;
+    }
 }
 /*
     function deleteData will search from head to find the first n node which hold the data and remove it.
@@ -46,7 +92,10 @@ void deleteData(struct Node **head, int data)
 */
 void deleteDatas(struct Node **head, int data, int n)
 {
-
+    for(int i=0;i<n;i++)
+    {
+        deleteData(head, data);
+    }
 }
 /*
     function display will print out all the data in the linked list from the head
@@ -58,5 +107,18 @@ void deleteDatas(struct Node **head, int data, int n)
 */
 void display(struct Node *head)
 {
-
+    printf("(");
+    struct Node *curr=head;
+    while(curr)
+    {
+        if(curr->next==NULL)
+        {
+            printf("%d)", curr->data);
+        }
+        else{
+            printf("%d, ", curr->data);
+        }
+        curr=curr->next;
+    }
+    printf("\n");
 }
